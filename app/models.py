@@ -13,19 +13,15 @@ class ExchangeData(db.Model):
     price = db.Column(db.Numeric(20, 8), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
 
+    def __init__(self, currency, amount, rate, price):
+        self.currency = currency
+        self.amount = amount
+        self.rate = rate
+        self.price = price
+
     def __repr__(self):
-        return f'{self.amount} USD equals {self.price} {self.currency}'
+        return "<{}{} at price {}>".format(self.amount, self.currency, self.price)
 
     def save(self):
         db.session.add(self)
         db.session.commit()
-
-    def serialize(self):
-        return {
-            'id': self.id,
-            'currency': self.currency,
-            'amount': self.amount,
-            'rate': self.rate,
-            'price': self.price,
-            'created_at': self.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-        }

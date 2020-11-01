@@ -1,20 +1,36 @@
 from . import api
-# from flask import request
-# from flask import jsonify
-from flask_restful import Resource
-# reqparse
+from flask import jsonify, request
+from app.models import ExchangeData
+
+
+@api.route('/', methods=['GET'])
+def one():
+    ex = ExchangeData.query.first()
+
+    ret = {
+        'id': ex.id,
+        'currency': ex.currency,
+        'rate': str(ex.rate),
+        'price': str(ex.price),
+        'created_at': ex.created_at
+    }
+
+    return jsonify(ret)
 
 
 @api.route('/last', methods=['GET'])
-def index():
-    return 'last hhh'
+def last():
+    return 'yooo'
 
 
 @api.route('/grab_and_save', methods=['POST'])
 def grab_and_save():
-    return 'grab and save datas'
+    currency = request.form['currency']
+    amount = request.form['amount']
+    rate = request.form['rate']
+    price = request.form['price']
 
+    ex = ExchangeData(currency=currency, amount=amount, rate=rate, price=price)
 
-class ExchangeData(Resource):
-    def post(self):
-        pass
+    ex.save()
+    return 'ok'

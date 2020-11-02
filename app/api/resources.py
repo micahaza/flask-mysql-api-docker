@@ -44,7 +44,6 @@ class ExchangeDataResource(Resource):
 
         sch = ExchangeDataSchema()
         response = jsonify(sch.dump(exchange_data))
-        # response = jsonify(exchange_data)
         response.status_code = 201
 
         return response
@@ -52,14 +51,27 @@ class ExchangeDataResource(Resource):
 
 class LastOperationsResouce(Resource):
     def get(self):
-        ex = ExchangeData.query.first()
+        parser = reqparse.RequestParser()
+        parser.add_argument('num_records', type=amount_validator, location='args', required=False)
+        parser.add_argument('currency', type=currency_validator, location='args', required=False)
 
-        ret = {
-            'id': ex.id,
-            'currency': ex.currency,
-            'rate': str(ex.rate),
-            'price': str(ex.price),
-            'created_at': ex.created_at
-        }
+        args = parser.parse_args()
+        currency = args.get('currency', "")
+        num_records = args.get('num_records', None)
+        num_records = num_records
 
-        return jsonify(ret)
+        queryset = ExchangeData.query
+
+        if currency:
+            queryset = queryset.filter_by(currency=currency)
+
+        queryset = queryset.order_by(ExchangeData.id.desc())
+
+        if num_records:
+            queryset = queryset.limit(num_records)
+
+        sch = ExchangeDataSchema()
+        response = jsonify([sch.dump(i) for i in queryset])
+        response.status_code = 200
+
+        return response

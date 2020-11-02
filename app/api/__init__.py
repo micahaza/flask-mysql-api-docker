@@ -1,4 +1,10 @@
 from flask import Blueprint
-api = Blueprint('api', __name__)
+from flask_restful import Api
+from .resources import ExchangeDataResource, LastOperationsResouce
 
-from . import routes # noqa
+api_blueprint = Blueprint('api', __name__)
+
+api = Api(api_blueprint)
+
+api.add_resource(ExchangeDataResource, '/grab_and_save')
+api.add_resource(LastOperationsResouce, '/last')

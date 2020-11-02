@@ -20,5 +20,5 @@ def initialize_extensions(app):
 
 
 def register_blueprints(app):
-    from app.api import api
-    app.register_blueprint(api, url_prefix='/')
+    from app.api import api_blueprint
+    app.register_blueprint(api_blueprint)

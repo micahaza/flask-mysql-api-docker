@@ -4,13 +4,11 @@ from app.models import ExchangeData
 def test_demo(test_client):
     data = {
         'currency': 'HUF',
-        'amount': 3600,
-        'rate': 260,
-        'price': 311
+        'amount': 20.812
     }
 
     response = test_client.post('/grab_and_save', data=data)
-    assert response.status_code == 200
+    assert response.status_code == 201
 
     ex = ExchangeData.query.first()
     assert ex.currency == 'HUF'

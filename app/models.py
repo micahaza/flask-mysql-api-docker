@@ -8,7 +8,7 @@ class ExchangeData(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     currency = db.Column(db.String(3), index=True, nullable=False)
-    amount = db.Column(db.Integer, nullable=False)
+    amount = db.Column(db.Numeric(20, 8), nullable=False)
     rate = db.Column(db.Numeric(20, 8), nullable=False)
     price = db.Column(db.Numeric(20, 8), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
@@ -20,7 +20,7 @@ class ExchangeData(db.Model):
         self.price = price
 
     def __repr__(self):
-        return "<{}{} at price {}>".format(self.amount, self.currency, self.price)
+        return "<{}{} at price: {}>".format(self.amount, self.currency, self.price)
 
     def save(self):
         db.session.add(self)

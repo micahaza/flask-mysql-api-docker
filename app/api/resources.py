@@ -1,10 +1,10 @@
-from flask import jsonify, current_app
+from flask import jsonify
 from flask_restful import Resource, reqparse
 from app.models import ExchangeData
 from .validators import amount_validator, currency_validator
-from .helpers import calculate_price
+from .helpers import calculate_price, get_price_info, NotSupportedCurrecyException
 from .schemas import ExchangeDataSchema
-import requests
+from requests.exceptions import ConnectionError, ConnectTimeout
 
 
 class ExchangeDataResource(Resource):
@@ -17,27 +17,21 @@ class ExchangeDataResource(Resource):
         currency = args.get('currency')
         amount = args.get('amount')
 
-        params = {
-            'app_id': current_app.config['OPENEXCHANGE_APP_ID'],
-            'base': current_app.config['OPENEXCHANGE_BASE_CURRENCY'],
-            'symbols': currency
-        }
+        try:
+            rates = get_price_info(currency)
+        except (ConnectionError, ConnectTimeout) as e:
+            response = jsonify({'error': str(e)})
+            response.status_code = 400
+            return response
 
         try:
-            resp = requests.get(current_app.config['OPENEXCHANGE_API_URL'], params=params)
-            resp.raise_for_status()
-        except Exception as e:
-            response = jsonify({"message": str(e)})
+            rate = rates[currency]
+        except NotSupportedCurrecyException:
+            response = jsonify({'error': "Exchange rate not found"})
             response.status_code = 400
             return response
 
-        rates = resp.json()['rates']
-        if currency not in rates:
-            response = jsonify({"message": "Exchange rate not found"})
-            response.status_code = 400
-            return response
-
-        dec_amount, dec_rate, dec_price = calculate_price(amount, rates[currency])
+        dec_amount, dec_rate, dec_price = calculate_price(amount, rate)
 
         exchange_data = ExchangeData(currency=currency, amount=dec_amount, price=dec_price, rate=dec_rate)
         exchange_data.save()

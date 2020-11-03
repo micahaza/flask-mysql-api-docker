@@ -53,6 +53,8 @@ class LastOperationsResouce(Resource):
         currency = args.get('currency', "")
         num_records = args.get('num_records', None)
         num_records = num_records
+        if not num_records and not currency:
+            num_records = 1
 
         queryset = ExchangeData.query
 

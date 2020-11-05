@@ -1,5 +1,5 @@
 import json
-from decimal import Decimal
+import decimal
 import requests
 from flask import current_app
 
@@ -11,9 +11,13 @@ def get_supported_currencies():
 
 
 def calculate_price(amount, rate):
-    dec_amount = Decimal(amount)
-    dec_rate = Decimal(rate)
-    exchange_price = (dec_amount / dec_rate)
+    my_context = decimal.Context(rounding=decimal.ROUND_HALF_UP)
+    cents = decimal.Decimal('0.00000000')
+    dec_amount = my_context.create_decimal(amount)
+    dec_rate = my_context.create_decimal(rate)
+
+    exchange_price = (dec_amount / dec_rate).quantize(cents, my_context)
+
     return dec_amount, dec_rate, exchange_price
 
 

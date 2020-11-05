@@ -4,6 +4,15 @@ mysql -v -u root --host=127.0.0.1 --port=32000 -p
 
 Please note I only built Docker containers for develoment, so testing has to be done without docker. Also production configuraton and Docker containers I did not provide, in production it should be run with nginx + gunicorn for example.
 
+## How to install and run the app
+
+The app comes with a simple initialization SQL file which will create the necessary database tables and insert some fake data.
+* git clone https://gitlab.com/micahaza/xapo_test_task.git
+* cd xapo_test_task
+* docker-compose up
+* visit http://localhost:5000/last, you should see a single item in JSON format
+
+
 ## General requirements
 * Create POST '/grab_and_save' endpoint
 * Create GET '/last' endpoint
@@ -25,12 +34,9 @@ Please note I only built Docker containers for develoment, so testing has to be 
 * Register and use OpenExchangeRates API Key
 * API Key is configurable
 * Obtain the price for the currency passed in the POST request body
-
-??? Multiply the price for the amount passed in the POST request body and obtain a final amount.
-
-??? Store in MySQL the currency, the amount requested, the price given by open exchange rate and the final amount in USD
-
-??? Use a precision of 8 decimal digits, and always round up. Do not loose precision in calculations!
+* Multiply the price for the amount passed in the POST request body and obtain a final amount.
+* Store in MySQL the currency, the amount requested, the price given by open exchange rate and the final amount in USD
+* Use a precision of 8 decimal digits, and always round up. Do not loose precision in calculations!
 
 
 ## GET '/last' functionality
@@ -40,13 +46,35 @@ Please note I only built Docker containers for develoment, so testing has to be 
 * or it can be called using both a currency and a number, in which case you will need to return the last N operations for that currency
 * If currency is not supported we return a JSON error message
 
- 
+## Tests
+* GET '/last' testing with all the possible parameter combinations
+* Tests for malformed input are missing 
+* POST '/grab_and_save' is **skipped** as it calls external api 
 
-# How to install and run the app
 
-# How to test the app with tox
+## How to run tests
 Tox will run flake8 first for enforcing style consistency, then py.test to test the code.
+I did not build a container for testing so it has to be done manually
 
+* **bash$** python3 -m venv env
+
+* **bash$** source ./env/bin/activate
+
+* **bash$** pip install -r requirements.txt
+
+* **bash$** tox
 
 ## Curl example calls for external testing
+
+curl -X GET "http://localhost:5000/last"
+
+curl -X GET "http://localhost:5000/last?currency=BTC"
+
+curl -X GET "http://localhost:5000/last?num_records=3"
+
+curl -X GET "http://localhost:5000/last?currency=BTC&num_records=3"
+
+
+
+curl -X POST "http://localhost:5000/grab_and_save" -d "currency=BTC" -d "amount=1.337"
 

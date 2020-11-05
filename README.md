@@ -59,7 +59,14 @@ The app comes with a simple initialization SQL file which will create the necess
 
 ## How to run tests
 Tox will run flake8 first for enforcing style consistency, then py.test to test the code.
-I did not build a container for testing so it has to be done manually
+I did not build a container for testing so it has to be done manually. 
+
+You have to create local database, default parameters: 
+* **mysql user**: user
+* **mysql password**: kiscsillag
+* **mysql database**: xapo_test_task_testing
+
+If you want, you can use different values and you'll need to update instance/testing.cfg
 
 * **bash$** python3 -m venv env
 

@@ -4,6 +4,8 @@ mysql -v -u root --host=127.0.0.1 --port=32000 -p
 
 Please note I only built Docker containers for develoment, so testing has to be done without docker. Also production configuraton and Docker containers I did not provide, in production it should be run with nginx + gunicorn for example.
 
+*For the sake of simplicty **I've added instance** folder with configurations. In real life this directory should not be controlled by git, you should create it manually.* 
+
 ## How to install and run the app
 
 The app comes with a simple initialization SQL file which will create the necessary database tables and insert some fake data.

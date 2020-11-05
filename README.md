@@ -1,5 +1,3 @@
-mysql -v -u root --host=127.0.0.1 --port=32000 -p
-
 # XAPO Test task README
 
 Please note I only built Docker containers for develoment, so testing has to be done without docker. Also production configuraton and Docker containers I did not provide, in production it should be run with nginx + gunicorn for example.

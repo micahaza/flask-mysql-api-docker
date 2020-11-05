@@ -12,6 +12,10 @@ The app comes with a simple initialization SQL file which will create the necess
 * docker-compose up
 * visit http://localhost:5000/last, you should see a single item in JSON format
 
+## Docker containers
+* **flask_api**
+* **mysql**
+  * mysql -v -u root --host=127.0.0.1 --port=32000 -proot
 
 ## General requirements
 * Create POST '/grab_and_save' endpoint
@@ -38,7 +42,6 @@ The app comes with a simple initialization SQL file which will create the necess
 * Store in MySQL the currency, the amount requested, the price given by open exchange rate and the final amount in USD
 * Use a precision of 8 decimal digits, and always round up. Do not loose precision in calculations!
 
-
 ## GET '/last' functionality
 * this endpoint can be called alone, in which case it will return the last operation stored in MySQL
 * or it can be passed a "currency" in which case you will need to return the last record for that specific currency from the MySQL DB
@@ -47,7 +50,7 @@ The app comes with a simple initialization SQL file which will create the necess
 * If currency is not supported we return a JSON error message
 
 ## Tests
-* GET '/last' testing with all the possible parameter combinations
+* GET '/last' testing with some of the possible parameter combinations
 * Tests for malformed input are missing 
 * POST '/grab_and_save' is **skipped** as it calls external api 
 

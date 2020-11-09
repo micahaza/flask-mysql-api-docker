@@ -1,4 +1,4 @@
-# XAPO Test task README
+# flask-mysql-api-docker Test task README
 
 Please note I only built Docker containers for develoment, so testing has to be done without docker. Also production configuraton and Docker containers I did not provide, in production it should be run with nginx + gunicorn for example.
 
@@ -7,8 +7,8 @@ Please note I only built Docker containers for develoment, so testing has to be 
 ## How to install and run the app
 
 The app comes with a simple initialization SQL file which will create the necessary database tables and insert some fake data.
-* git clone https://gitlab.com/micahaza/xapo_test_task.git
-* cd xapo_test_task
+* git clone git@github.com:micahaza/flask-mysql-api-docker.git
+* cd flask-mysql-api-docker
 * docker-compose up
 * visit http://localhost:5000/last, you should see a single item in JSON format
 
